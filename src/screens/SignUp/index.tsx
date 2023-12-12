@@ -1,8 +1,10 @@
+import { useAuth } from '@hooks/useAuth';
 import { useNavigation } from '@react-navigation/native';
-
 import { useForm, Controller } from 'react-hook-form';
+
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Platform } from 'react-native';
 
 import {
   VStack,
@@ -14,63 +16,77 @@ import {
   useToast
 } from 'native-base';
 
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
+
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
-import { useAuth } from '@hooks/useAuth';
-
-import { Alert, Platform } from 'react-native';
 
 import backgroundImg from '@assets/background.png';
 import LogoSvg from '@assets/logo.svg';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
-import { AppError } from '@utils/AppError';
 import { useState } from 'react';
 
 
 type FormDataProps = {
+  name: string;
   email: string;
   password: string;
+  password_confirm: string;
 }
 
-const signInSchema = yup.object({
+const signUpSchema = yup.object({
+  name: yup.string().required('Informe o nome.'),
   email: yup.string().required('Informe o email.').email('E-mail inválido.'),
   password: yup.string().required('Informe a senha.').min(6, 'A senha deve ter pelo menos 6 caractéres.'),
+  password_confirm: yup.string().required('Confirme a senha.').oneOf([yup.ref('password')], 'Confirmação de senha não confere')
 });
 
-export function SignIn() {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+export function SignUp() {
+  const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
-  const toast = useToast();
-
   const {
     control,
     handleSubmit,
     formState: { errors }
   } = useForm<FormDataProps>({
-    resolver: yupResolver(signInSchema)
+    resolver: yupResolver(signUpSchema)
   });
 
-  function handleNewAccount() {
-    navigation.navigate('signUp')
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  function handleGotoSignIn() {
+    navigation.navigate('signIn')
   }
 
-  async function handleSignIn({ email, password }: FormDataProps) {
+  // function handleSignUp() {
+  //   console.log({
+  //     name,
+  //     email,
+  //     password,
+  //     confirmPassword
+  //   })
+  // }
+
+  async function handleSignUp({ name, email, password }: FormDataProps) {
     setIsLoading(true)
     try {
-      await signIn(email, password)
+      await api.post('/users', { name, email, password });
+      signIn(email, password)
+
     } catch (error) {
       const isAppError = error instanceof AppError;
-
-      const title = isAppError ? error.message : 'Não foi possível entrar, tente mais tarde.';
-
-      setIsLoading(false)
+      const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente mais tarde.';
       toast.show({
         title,
         placement: 'top',
         background: 'red.500',
-      })
+      });
+
+      setIsLoading(false);
+
     } finally {
       setIsLoading(false)
     }
@@ -86,7 +102,7 @@ export function SignIn() {
         position='absolute'
       />
       <ScrollView
-        contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 280 : 16 }}
+        contentContainerStyle={{ paddingBottom: Platform.OS === 'ios' ? 180 : 16 }}
         showsVerticalScrollIndicator={false}
       >
         <Center my={24} justifyContent={'center'} alignItems={'center'}>
@@ -95,7 +111,7 @@ export function SignIn() {
             color={'gray.100'}
             fontSize={'sm'}
           >
-            Treine a sua mente e o seu corpo
+            Treine sua mente e o seu corpo
           </Text>
         </Center>
 
@@ -103,15 +119,40 @@ export function SignIn() {
           <Heading
             color={'gray.100'}
             fontSize={'xl'}
-            mb={6}
+            mb={1}
             fontFamily={'heading'}
           >
-            Acesse sua conta
+            Acesse a sua conta
           </Heading>
+
+
+          <Controller
+            control={control}
+            name='name'
+            // rules={{
+            //   required: 'Informe seu nome'
+            // }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder='Nome'
+                keyboardType='default'
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors.name?.message}
+              />
+            )}
+          />
 
           <Controller
             control={control}
             name='email'
+            // rules={{
+            //   required: 'Informe seu email',
+            //   pattern: {
+            //     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            //     message: 'E-mail inválido'
+            //   }
+            // }}
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder='Email'
@@ -129,36 +170,42 @@ export function SignIn() {
             name='password'
             render={({ field: { onChange, value } }) => (
               <Input
-                placeholder='senha'
+                placeholder='Senha'
                 secureTextEntry
-                autoCapitalize='none'
                 onChangeText={onChange}
                 value={value}
                 errorMessage={errors.password?.message}
               />
             )}
           />
+          <Controller
+            control={control}
+            name='password_confirm'
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder='Confirmar senha'
+                secureTextEntry
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors.password_confirm?.message}
+                onSubmitEditing={handleSubmit(handleSignUp)}
+                returnKeyType='send'
+              />
+            )}
+          />
 
 
           <Button
-            title='Acessar'
-            onPress={handleSubmit(handleSignIn)}
+            title='Criar e acessar'
+            onPress={handleSubmit(handleSignUp)}
             isLoading={isLoading}
           />
         </Center>
 
-        <Center mt={24}>
-          <Text
-            color='gray.100'
-            fontFamily='body'
-            fontSize='sm'
-            mb={3}
-          >
-            Ainda não tem acesso?
-          </Text>
+        <Center mt={19}>
           <Button
-            onPress={handleNewAccount}
-            title='Criar conta'
+            onPress={handleGotoSignIn}
+            title='Voltar para o login'
             variant='outline'
           />
         </Center>
