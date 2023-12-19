@@ -33,14 +33,18 @@
 
 <div class="row"> 
  <div class="column">
-  <img width="100" alt="askme" src="https://github.com/auadmendes/ignitegym/assets/5294488/6356b913-5fa4-4dea-9a2d-a7cb15d22ca8.PNG">
-  <img width="100" alt="askme" src="https://github.com/auadmendes/ignitegym/assets/5294488/25f48e0b-c696-486f-8827-0dc382647c4a.PNG">
-  <img width="100" alt="askme" src="https://github.com/auadmendes/ignitegym/assets/5294488/b1fbbf9b-68a5-44c7-88f2-69043b320b40.PNG">
-  <img width="100" alt="askme" src="https://github.com/auadmendes/ignitegym/assets/5294488/0b70c3d7-3d0d-4cea-b34d-32760211c0c0.PNG">
-  <img width="100" alt="askme" src="https://github.com/auadmendes/ignitegym/assets/5294488/a8514585-4f75-4d49-a66f-b1eef241c416.PNG">
-   <img width="100" alt="askme" src="https://github.com/auadmendes/ignitegym/assets/5294488/9639d772-c310-4280-b8ba-9e8a5f5d6c7c.PNG">
+  <img width="100" alt="gym" src="https://github.com/auadmendes/ignitegym/assets/5294488/6356b913-5fa4-4dea-9a2d-a7cb15d22ca8.PNG">
+  <img width="100" alt="gym" src="https://github.com/auadmendes/ignitegym/assets/5294488/25f48e0b-c696-486f-8827-0dc382647c4a.PNG">
+  <img width="100" alt="gym" src="https://github.com/auadmendes/ignitegym/assets/5294488/b1fbbf9b-68a5-44c7-88f2-69043b320b40.PNG">
+  <img width="100" alt="gym" src="https://github.com/auadmendes/ignitegym/assets/5294488/0b70c3d7-3d0d-4cea-b34d-32760211c0c0.PNG">
+  <img width="100" alt="gym" src="https://github.com/auadmendes/ignitegym/assets/5294488/a8514585-4f75-4d49-a66f-b1eef241c416.PNG">
+   <img width="100" alt="gym" src="https://github.com/auadmendes/ignitegym/assets/5294488/9639d772-c310-4280-b8ba-9e8a5f5d6c7c.PNG">
   </div>
   <div class="column">
-    
  </div>
+  
+# Video Loading...
+
+<img width="400" alt="gym" src="https://github.com/auadmendes/ignitegym/assets/5294488/c46eb926-1714-4a07-aa80-90c439466570.gif">
+ 
  </div>
